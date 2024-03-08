@@ -9,6 +9,7 @@ import categoryRoutes from "./routes/categoryRoutes.js";
 import productRoutes from "./routes/productRoutes.js";
 
 const app = express();
+
 // Configure env
 dotenv.config();
 
@@ -16,9 +17,6 @@ dotenv.config();
 connectDB();
 
 // Middleware
-
-app.use(express.json());
-app.use(morgan("dev")); // Use "dev" format for morgan logging
 app.use(
   cors({
     origin: ["https://stack-cart-client.vercel.app", "http://localhost:3000"],
@@ -26,18 +24,17 @@ app.use(
     credentials: true,
   })
 );
+app.use(express.json());
+app.use(morgan("dev")); // Use "dev" format for morgan logging
 
+// Routes
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to the ecommerce app</h1>");
 });
-// Routes
+
 app.use("/api/v1/auth", authRoute);
 app.use("/api/v1/category", categoryRoutes);
 app.use("/api/v1/product", productRoutes);
-
-app.get("/", (req, res) => {
-  res.send("<h1>Welcome to the ecommerce app</h1>");
-});
 
 const PORT = process.env.PORT || 8080;
 
