@@ -195,20 +195,39 @@ export const updateProductController = async (req, res) => {
 export const productFiltersController = async (req, res) => {
   try {
     const { checked, radio } = req.body;
-    let args = {};
-    if (checked.length > 0) args.category = checked;
-    if (radio.length) args.price = { $gte: radio[0], $lte: radio[1] };
-    const products = await productModel.find(args);
-    res.status(200).send({
-      success: true,
-      products,
-    });
+    const filterQuery = {};
+
+    // Combine category and price filters into a single query
+    if (checked.length > 0 || radio.length === 2) {
+      if (checked.length > 0) {
+        filterQuery.category = { $in: checked };
+      }
+
+      if (radio.length === 2) {
+        filterQuery.price = { $gte: radio[0], $lte: radio[1] };
+      }
+
+      const products = await productModel.find(filterQuery);
+
+      res.status(200).send({
+        success: true,
+        products,
+      });
+    } else {
+      // No filters applied, return all products
+      const products = await productModel.find();
+
+      res.status(200).send({
+        success: true,
+        products,
+      });
+    }
   } catch (error) {
-    console.log(error);
-    res.status(400).send({
+    console.error(error);
+    res.status(500).send({
       success: false,
-      message: "Error WHile Filtering Products",
-      error,
+      message: "Error While Filtering Products",
+      error: error.message,
     });
   }
 };
