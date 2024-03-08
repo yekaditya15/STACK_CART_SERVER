@@ -16,18 +16,16 @@ dotenv.config();
 connectDB();
 
 // Middleware
+
+app.use(express.json());
+app.use(morgan("dev")); // Use "dev" format for morgan logging
 app.use(
   cors({
-    origin: [
-      "https://stack-cart-client.vercel.app",
-      "http://localhost:3000",
-    ],
+    origin: ["https://stack-cart-client.vercel.app", "http://localhost:3000"],
     methods: ["POST", "GET", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
-app.use(express.json());
-app.use(morgan("dev")); // Use "dev" format for morgan logging
 
 app.get("/", (req, res) => {
   res.send("<h1>Welcome to the ecommerce app</h1>");
