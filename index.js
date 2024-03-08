@@ -25,6 +25,7 @@ app.use(
   })
 );
 app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 app.use(morgan("dev")); // Use "dev" format for morgan logging
 
 // Routes

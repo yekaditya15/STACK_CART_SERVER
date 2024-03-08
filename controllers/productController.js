@@ -207,7 +207,7 @@ export const productFiltersController = async (req, res) => {
         filterQuery.price = { $gte: radio[0], $lte: radio[1] };
       }
 
-      const products = await productModel.find(filterQuery).limit(3).skip(0);
+      const products = await productModel.find(filterQuery).limit(6).skip(0);
 
       res.status(200).send({
         success: true,
@@ -322,11 +322,15 @@ export const realtedProductController = async (req, res) => {
   }
 };
 
-// get prdocyst by catgory
+// get products by catgory
 export const productCategoryController = async (req, res) => {
   try {
     const category = await categoryModel.findOne({ slug: req.params.slug });
-    const products = await productModel.find({ category }).populate("category");
+    const products = await productModel
+      .find({ category })
+      .populate("category")
+      .limit(6)
+      .skip(0);
     res.status(200).send({
       success: true,
       category,
