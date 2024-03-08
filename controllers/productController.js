@@ -207,7 +207,7 @@ export const productFiltersController = async (req, res) => {
         filterQuery.price = { $gte: radio[0], $lte: radio[1] };
       }
 
-      const products = await productModel.find(filterQuery);
+      const products = await productModel.find(filterQuery).limit(3).skip(0);
 
       res.status(200).send({
         success: true,
